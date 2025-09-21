@@ -1,0 +1,7 @@
+Jinja2==3.1.6
+MarkupSafe==3.0.2
+pytest==8.4.2
+PyYAML==6.0.2
+regex==2025.9.18
+sqlfluff==3.4.2
+sqlglot==27.16.3
