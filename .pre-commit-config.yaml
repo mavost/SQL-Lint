@@ -1,16 +1,20 @@
 repos:
   - repo: local
     hooks:
-      - id: bracketize-sql
-        name: Bracketize SQL Identifiers
-        entry: python scripts/bracketize_sql.py
-        language: python
-        types: [sql]
-        pass_filenames: true
+      # - id: bracketize-sql
+      #   name: Bracketize SQL Identifiers
+      #   entry: python scripts/bracketize_sql.py
+      #   language: python
+      #   types: [sql]
+      #   pass_filenames: true
+      #   additional_dependencies:
+      #     - sqlglot==27.16.3
 
       - id: sqlfluff-fix
         name: SQLFluff Auto-Fix
         entry: sqlfluff fix
-        language: system
+        language: python
         types: [sql]
         pass_filenames: true
+        additional_dependencies:
+          - sqlfluff==3.4.2

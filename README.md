@@ -8,7 +8,9 @@ Revision: September 2025
 
 ## Description
 
-This README explains how to enforce consistent T-SQL formatting and mandatory bracketing of schema, table, and column identifiers in your repository using a Python script with `sqlglot` and SQLFluff, integrated via `pre-commit`.
+This README explains how to enforce consistent T-SQL formatting and mandatory bracketing of schema, table, and column identifiers in your repository using  SQLFluff, integrated via `pre-commit`.
+
+The option the automate consistent bracketing using a Python script with `sqlglot` is under development.
 
 ---
 
@@ -23,7 +25,7 @@ This README explains how to enforce consistent T-SQL formatting and mandatory br
    └─ your_sql_files.sql
 ```
 
-- `scripts/bracketize_sql.py`: Python script that brackets schema, table, and column names.
+- `scripts/bracketize_sql.py`: Python script that brackets schema, table, and column names (*work in progress*).
 - `.pre-commit-config.yaml`: Pre-commit configuration to run the Python script and SQLFluff.
 - `requirements.txt`: Python environment dependencies, including `sqlglot` and `sqlfluff`.
 - `sql/`: Folder containing SQL files in your project.
@@ -66,22 +68,26 @@ Example configuration:
 repos:
   - repo: local
     hooks:
-      - id: bracketize-sql
-        name: Bracketize SQL Identifiers
-        entry: python scripts/bracketize_sql.py
-        language: python
-        types: [sql]
-        pass_filenames: true
+      # - id: bracketize-sql
+      #   name: Bracketize SQL Identifiers
+      #   entry: python scripts/bracketize_sql.py
+      #   language: python
+      #   types: [sql]
+      #   pass_filenames: true
+      #   additional_dependencies:
+      #     - sqlglot==27.16.3
 
       - id: sqlfluff-fix
         name: SQLFluff Auto-Fix
         entry: sqlfluff fix
-        language: system
+        language: python
         types: [sql]
         pass_filenames: true
+        additional_dependencies:
+          - sqlfluff==3.4.2
 ```
 
-- The first hook brackets identifiers using the Python script.
+- (The first hook brackets identifiers using the Python script).
 - The second hook runs `sqlfluff fix` to enforce other formatting rules.
 
 ---
@@ -130,6 +136,8 @@ prefer_quoted_keywords = False
 
 This ensures SQLFluff runs with T-SQL dialect, your preferred capitalization, line lengths, and rule exclusions.
 
+Note: Violations of bracketing rules is detected and flagged by sqlfluff but cannot be fixed by the tool.
+
 ---
 
 ## Step 4: Install the pre-commit hooks
@@ -167,7 +175,7 @@ Runs all hooks on all files in the repository, not just staged files.
     ```
 
 - Hooks run automatically:
-  1. `bracketize_sql.py` brackets schema, table, and column identifiers.
+  1. (`bracketize_sql.py` brackets schema, table, and column identifiers.)
   2. `sqlfluff fix` formats the SQL according to your SQLFluff configuration.
 - If any files are modified by the hooks, Git will stop the commit. Re-add the modified files and commit again.
 
