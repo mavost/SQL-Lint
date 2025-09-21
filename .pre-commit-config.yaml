@@ -1,4 +1,10 @@
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+    - id: check-yaml
+    - id: end-of-file-fixer
+    - id: trailing-whitespace
   - repo: local
     hooks:
       # - id: bracketize-sql
@@ -12,7 +18,7 @@ repos:
 
       - id: sqlfluff-fix
         name: SQLFluff Auto-Fix
-        entry: sqlfluff fix
+        entry: sqlfluff fix --show-lint-violations
         language: python
         types: [sql]
         pass_filenames: true
