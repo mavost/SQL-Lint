@@ -1,5 +1,5 @@
 [sqlfluff]
-
+# full configuration file https://docs.sqlfluff.com/en/3.4.1/configuration/default_configuration.html
 # Supported dialects https://docs.sqlfluff.com/en/stable/perma/dialects.html
 # Or run 'sqlfluff dialects'
 dialect = tsql
@@ -27,25 +27,35 @@ max_line_length = 120
 # e.g. -1 means use all processors but one. 0 means all cpus.
 processes = -1
 
+[sqlfluff:indentation]
+# While implicit indents are not enabled by default. Many of the
+# SQLFluff maintainers do use them in their projects.
+indent_unit = space
+tab_space_size = 4
+indented_joins = False
+indented_using_on = True
+allow_implicit_indents = True
+
+indented_ctes = True
+
+[sqlfluff:layout:type:comma]
+spacing_after = touch
+line_position = leading
+
+[sqlfluff:layout:type:join_on_condition]
+keyword_line_position = leading
+
 # If using the dbt templater, we recommend setting the project dir.
 [sqlfluff:templater:dbt]
 project_dir = ./
 
-[sqlfluff:layout:type:comma]
-line_position = leading
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
 
-[sqlfluff:indentation]
-# While implicit indents are not enabled by default. Many of the
-# SQLFluff maintainers do use them in their projects.
-allow_implicit_indents = True
-
-indented_joins = True
-
-indented_using_on = False
-
-
-[sqlfluff:rules:aliasing.length]
-min_alias_length = 3
+# Some rules can be configured directly from the config common to other rules
+[sqlfluff:rules]
+# Must be one of ['all', 'aliases', 'column_aliases', 'table_aliases']
+unquoted_identifiers_policy = column_aliases
 
 # The default configuration for capitalisation rules is "consistent"
 # which will auto-detect the setting from the rest of the file. This
@@ -67,6 +77,9 @@ capitalisation_policy = lower
 [sqlfluff:rules:capitalisation.types]
 extended_capitalisation_policy = upper
 
+[sqlfluff:rules:aliasing.length]
+min_alias_length = 1
+
 # The default configuration for the not equal convention rule is "consistent"
 # which will auto-detect the setting from the rest of the file. This
 # is less desirable in a new project and you may find this (slightly
@@ -78,3 +91,7 @@ preferred_not_equal_style = c_style
 [sqlfluff:rules:references.quoting]
 prefer_quoted_identifiers = False
 prefer_quoted_keywords = False
+
+[sqlfluff:rules:layout.newlines]
+maximum_empty_lines_between_statements = 2
+maximum_empty_lines_inside_statements = 1
