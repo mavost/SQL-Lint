@@ -45,7 +45,7 @@ def transform(node: exp.Expression, parent=None) -> exp.Expression:
         if isinstance(db, exp.Identifier):
             node.set("db", exp.Identifier(this=bracket_identifier(db.this)))
         elif isinstance(db, str):
-            node.set("db", exp.Identifier(this=bracket_identifier(db))) 
+            node.set("db", exp.Identifier(this=bracket_identifier(db)))
         catalog = node.args.get("catalog")
         print(f"Nodecatalog: {catalog}")
         if isinstance(catalog, exp.Identifier):
