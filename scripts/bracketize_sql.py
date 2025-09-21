@@ -2,6 +2,7 @@
 import sys
 import sqlglot
 from sqlglot import exp
+import re
 
 def bracket_identifier(name: str) -> str:
     """Wrap an identifier in brackets if not already bracketed."""
@@ -53,20 +54,18 @@ def bracketize(sql: str) -> str:
 
 def process_file(filename: str):
     with open(filename, "r", encoding="utf-8") as f:
-        sql_in = f.read()
+        sql_text = f.read()
 
-    sql_out = bracketize(sql_in)
+    # Split by GO separator (case-insensitive, line-only)
+    batches = re.split(r'(?im)^\s*GO\s*$', sql_text, flags=re.MULTILINE)
+    processed_batches = [bracketize(batch) for batch in batches]
+    sql_out = 'GO\n'.join(processed_batches)
 
-    # Only write if changed
-    if sql_out != sql_in:
-        with open(filename, "w", encoding="utf-8") as f:
-            f.write(sql_out)
-        print(f"Bracketed identifiers in {filename}")
-    else:
-        print(f"No changes needed for {filename}")
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(sql_out)
 
 if __name__ == "__main__":
-    files = sys.argv[1:]
-    for file in files:
+    import sys
+    for file in sys.argv[1:]:
         if file.endswith(".sql"):
             process_file(file)
